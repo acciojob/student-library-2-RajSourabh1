@@ -16,12 +16,12 @@ public class BookService {
 
     @Autowired
     BookRepository bookRepository2;
-    AuthorRepository authorRepository;
+    AuthorRepository authorRepository1;
 
     public void createBook(Book book){
 
         int authorId = book.getAuthor().getId();
-        Author author = authorRepository.findById(authorId).get();
+        Author author = authorRepository1.findById(authorId).get();
 
         List<Book> bookList = author.getBooksWritten();
         bookList.add(book);
@@ -29,7 +29,7 @@ public class BookService {
 
         book.setAuthor(author);
 
-        authorRepository.save(author);
+        authorRepository1.save(author);
 
         bookRepository2.save(book);
     }
