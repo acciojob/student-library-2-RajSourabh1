@@ -17,6 +17,9 @@ public class CardService {
     public Card createAndReturn(Student student){
         Card card = null;
         //link student with a new card
+        card = new Card();
+        card.setCardStatus(CardStatus.ACTIVATED);
+        card.setStudent(student);
         return card;
     }
 
