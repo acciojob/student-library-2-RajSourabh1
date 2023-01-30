@@ -16,6 +16,7 @@ public class BookService {
 
     @Autowired
     BookRepository bookRepository2;
+    @Autowired
     AuthorRepository authorRepository1;
 
     public void createBook(Book book){
@@ -35,7 +36,7 @@ public class BookService {
     }
 
     public List<Book> getBooks(String genre, boolean available, String author){
-        List<Book> books = null; //find the elements of the list by yourself
+         //find the elements of the list by yourself
 
         if(author!=null && genre!=null)
             return bookRepository2.findBooksByGenreAuthor(genre,author,available);
