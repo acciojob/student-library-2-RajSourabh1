@@ -32,7 +32,7 @@ public class BookService {
         book.setAvailable(true);
         authorRepository1.save(author);
 
-       // bookRepository2.save(book);
+        bookRepository2.save(book);
     }
 
     public List<Book> getBooks(String genre, boolean available, String author){
