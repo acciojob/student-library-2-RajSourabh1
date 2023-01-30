@@ -40,10 +40,11 @@ public class Book {
     public Book() {
     }
 
-    public Book(String name, Genre genre, Author author) {
+    public Book(String name, Genre genre, Author author,boolean available) {
         this.name = name;
         this.genre = genre;
         this.author = author;
+        this.available = true;
     }
 
     public int getId() {
