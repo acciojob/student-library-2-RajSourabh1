@@ -13,24 +13,27 @@ import java.util.List;
 @Service
 public class BookService {
 
-
     @Autowired
     BookRepository bookRepository2;
+
     @Autowired
     AuthorRepository authorRepository1;
 
     public void createBook(Book book){
 
         int authorId = book.getAuthor().getId();
+
         Author author = authorRepository1.findById(authorId).get();
 
         author.getBooksWritten().add(book);
 
         book.setAuthor(author);
-        book.setAvailable(true);
-        authorRepository1.save(author);
+      //  book.setAvailable(true);
 
         bookRepository2.save(book);
+
+        authorRepository1.save(author);
+
     }
 
     public List<Book> getBooks(String genre, boolean available, String author){
