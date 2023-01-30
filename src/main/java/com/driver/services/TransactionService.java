@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class TransactionService {
@@ -74,10 +75,11 @@ public class TransactionService {
         book.setAvailable(false);
         book.getTransactions().add(transaction);
 
+        bookRepository5.updateBook(book);
+
         transaction.setBook(book);
         transaction.setCard(card);
         transaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
-        transaction.setTransactionDate(new Date());
         transactionRepository5.save(transaction);
 
         return transaction.getTransactionId(); //return transactionId instead
@@ -92,17 +94,33 @@ public class TransactionService {
         //make the book available for other users
         //make a new transaction for return book which contains the fine amount as well
 
-            Book book = bookRepository5.findById(bookId).get();
-            Card card = cardRepository5.findById(cardId).get();
+        Date issueDate = transaction.getTransactionDate();
+        long timeIssueTime = System.currentTimeMillis()-issueDate.getTime();
+        long noOfDaysPassed = TimeUnit.DAYS.convert(timeIssueTime,TimeUnit.MILLISECONDS);
 
-            Date bookIssueDate = transaction.getTransactionDate();
-            Date currentDate = new Date();
+        int fine = 0;
+        if(noOfDaysPassed>getMax_allowed_days)
+            fine = (int) ((noOfDaysPassed-getMax_allowed_days)*fine_per_day);
 
-            card.getBooks().remove(book);
+
+            Book book = transaction.getBook();
             book.setAvailable(true);
+            book.setCard(null);
+            bookRepository5.updateBook(book);
 
+            Card card = cardRepository5.findById(cardId).get();
+            card.getBooks().remove(book);
+            cardRepository5.save(card);
 
-        Transaction returnBookTransaction  = null;
-        return returnBookTransaction; //return the transaction after updating all details
+            Transaction tr = new Transaction();
+            tr.setTransactionStatus(TransactionStatus.SUCCESSFUL);
+            tr.setBook(transaction.getBook());
+            tr.setCard(transaction.getCard());
+            tr.setIssueOperation(false);
+            tr.setFineAmount(fine);
+
+            transactionRepository5.save(tr);
+
+        return tr; //return the transaction after updating all details
     }
 }
