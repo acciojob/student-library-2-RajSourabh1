@@ -24,9 +24,7 @@ public class BookService {
         int authorId = book.getAuthor().getId();
         Author author = authorRepository1.findById(authorId).get();
 
-        List<Book> bookList = author.getBooksWritten();
-        bookList.add(book);
-        author.setBooksWritten(bookList);
+        author.getBooksWritten().add(book);
 
         book.setAuthor(author);
         book.setAvailable(true);
@@ -38,11 +36,11 @@ public class BookService {
     public List<Book> getBooks(String genre, boolean available, String author){
          //find the elements of the list by yourself
 
-        if(author!=null && genre!=null)
+        if(genre!=null && author!=null)
             return bookRepository2.findBooksByGenreAuthor(genre,author,available);
-        else if(author!=null)
+        else if(genre!=null)
             return bookRepository2.findBooksByAuthor(author,available);
-        else if (genre!=null)
+        else if (author!=null)
             return bookRepository2.findBooksByGenre(genre,available);
         else
             return bookRepository2.findByAvailability(available);
